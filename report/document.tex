@@ -1,11 +1,7 @@
-\documentclass[twocolumns]{IEEEtran}
-\usepackage{tikz}
-\tikzstyle{box}=[rectangle,draw=black, ultra thick, minimum size=1cm]
-\usepackage{algorithm}
-\usepackage{algpseudocode}
+\documentclass{IEEEtran}
 \usepackage{graphicx}
 \usepackage{caption}
-
+\usepackage{lipsum}
 
 \author{Alp Gokcek, Erdal Sidal Dogan, Mert Komurcuoglu\\\{gokcekal, doganer, komurcuoglum\}@mef.edu.tr\\ MEF University \\ \today}
 \title{Rock-Paper-Scissors AI Agent}
@@ -13,25 +9,72 @@
 
 \begin{document}
 	\maketitle
-\section{Introduction}
-
-Rock-Paper-Scissors is a game that has been around for while and well known to almost everyone. The game is played with two players, goal is to defeat the opponent by making a choice that prevails the opponents. Rules to defeat is as follows;
-
-\begin{enumerate}
-	\item Paper\textgreater Rock
-	\item Rock\textgreater Scissors	
-	\item Scissors\textgreater Paper
-\end{enumerate}
-
-In the beginning of the game, two players make a random choice among the Rock-Paper-Scissor triplet simultaneously. Whoever made the choice that defeats the opponents choice wins the game.
-
-Even though it seems that the choices are random and probabilities of winning for each player is equal, scientist discover that "if a player wins for a round, they are much more likely to win to following one too". Furthermore, the choices 
-
-
-
-
-
+	\section{Introduction}
+	
+	Rock-Paper-Scissors is a game that has been around for while and well known to almost everyone. The game is played with two players, goal is to defeat the opponent by making a choice that prevails the opponents. Rules to defeat is as follows;
+	
+	\begin{enumerate}
+		\item Paper\textgreater Rock
+		\item Rock\textgreater Scissors	
+		\item Scissors\textgreater Paper
+	\end{enumerate}
+	
+	In the beginning of the game, two players make a random choice among the Rock-Paper-Scissor triplet simultaneously. Whoever made the choice that defeats the opponents choice wins the game.
+	
+	Even though it seems that the choices are random and probabilities of winning for each player is equal, scientist discover that "if a player wins for a round, they are much more likely to win to following one too".Furthermore, the choices that players make are prone to biases. \cite{winning-rps} 
+	
+	\section{Solution Design Process}
+	
+	For this problem, our initial approach was to design a rule based system where the each case was covered with the if-else statements. Later on, we searched for another applicable method that we have covered in the lecture so far. Upon our researches, we decided to use \textit{Discrete Markov Chains}
+	
+	\textit{DMC} methods suggest creating a \textit{State Transition Matrix}. Each column of the matrix is the probability score of the upcoming move of the opponent; rows of the matrix corresponds to a previous set of plays and stochastic. \\
+	
+	\begin{table}[h!]
+		\begin{center}
+					\caption{Transition Matrix with initial transition values}
+			\begin{tabular}{c | c  c  c}
+				State &  R & P & S \\
+				\hline
+				RRR & 0.333 & 0.333 & 0.333 \\
+				RRP & 0.333 & 0.333 & 0.333 \\
+				RRS & 0.333 & 0.333 & 0.333 \\
+				\vdots \\
+				SSS & 0.333 & 0.333 & 0.333 \\
+			\end{tabular}
+		\end{center}
+	\end{table}
+	
+	\section{Implementation}
+	
+	The program has been implemented with \textit{Python Language}. In order to have concise structure in the program, we defined our AI Agent as an object. This class, consist of transition matrix and all the complementary methods such as create matrix, update matrix etc.
+	
+	Most important function and variables in this class are as follows; \texttt{update\_transition\_matrix(), predict()}
+	
+	\subsection{Update Transition Matrix}
+		The program makes probability calculations relying on last 3 moves of the opponent, hence, before this calculations game must be played at least three times. This method checks the game has played for at least 3 rounds, if not, doesn't update the matrix at all. Otherwise, it multiplies each value on the row with a predefined \texttt{decay} value in order to reduce the weight of the earlier moves and increase the effect of the last move on the probability score.
+		
+		Finally, it updates the \texttt{transition\_sum\_matrix} where the number of occurrence for the each case is stored. As the \texttt{transition\_sum\_matrix} is updated, new probability scores are calculated on the \texttt{transiton\_matrix}
+		
+	\subsection{Predict}
+		Since we don't have any data to make our predictions to be based on, in the initial predictions we used the statistics that psychologists observed when conduction a research about the human behavior on Rock-Paper-Scissors.  
+		
+	
+	
+	\begin{figure}\label{UML}
+		\centering
+		\includegraphics[scale=0.5]{RPS_Agent.png}
+		\caption{"UML Diagram of the RPS Agent Class"}
+	\end{figure}
+	
+	
+	\section{Testing}
+		\lipsum
+		
+	\section{Teamwork}
+			
+			
+	\section{Implementation}
+	\bibliographystyle{IEEEtran}
+	\bibliography{ref.bib}
+	
 \end{document}
-
-\bibliographystyle{IEEEtran}
-\bibliography{ref.bib}
