@@ -30,7 +30,7 @@
 	
 	\textit{DMC} methods suggest creating a \textit{State Transition Matrix}. Each column of the matrix is the probability score of the upcoming move of the opponent; rows of the matrix corresponds to a previous set of plays and stochastic. \\
 	
-	UML Diagram of the \texttt{RPS\_Agent} class can be seen from \ref{fig:UML}.
+	UML Diagram of the \texttt{RPS\_Agent} class can be seen from Figure \ref{UML}.
 	
 	\begin{table}[h!]
 		\begin{center}
@@ -64,27 +64,30 @@
 		\lstinputlisting[language={Python}, frame=single, breaklines, basicstyle=\ttfamily, caption= \texttt{update\_transition\_matrix()} method]{source-codes/update-transition-matrix.py} \label{update-matrix-code}
 
 	\subsection{Predict}
+		This method predicts the opponents move.
+	
 		Since we don't have any data to make our predictions to be based on, in the initial predictions we used the statistics that psychologists observed when conduction a research about the human behavior on Rock-Paper-Scissors.  
 		
-		For the later moves, we use the transition matrix as lookup table where the row corresponding the last 3 moves presents us with the probabilities of the next move. Intuitively, we choose the next state with the highest probability score. However, if one of the scores are significantly higher than the others, we assume that it will be predicted by our opponent agent and it will make their move accordingly. In order to protect ourselves from this move, we make the move with the least probability score to surprise the opponent. 
-			
+		For the later moves, we use the transition matrix as lookup table where the row corresponding the last 3 moves presents us with the probabilities of the next move. Intuitively, we choose the next state with the highest probability score. However, if one of the scores are significantly higher than the others, we assume that it will be predicted by our opponent agent and it will make their move accordingly. In order to protect ourselves from this move, we make the move with least probability score to surprise the opponent. 
 				
 		\lstinputlisting[language={Python}, frame=single, breaklines, basicstyle=\ttfamily, caption=\texttt{predict()} method]{source-codes/predict.py} \label{predict-code}
 	
 	\begin{figure}
 		\centering
 		\includegraphics[scale=0.5]{RPS_Agent.png}
-		\caption{"UML Diagram of the RPS Agent Class"}
-	\end{figure}\label{UML}
+		\caption{"UML Diagram of the RPS Agent Class"}\label{UML}
+	\end{figure}
 	
 	
 	\section{Testing}
-		\lipsum
+		During the testing stage, we saw that our initial approach where the outcome with the highest probability is chosen and if there is a significant gap with other options, our predictions would be obvious to the opponent as well. Thus, we've implemented a system that will take precautions by reverting the probability scores by subtraction from 1 and converting the least likely one to be the most likely. By this approach, we increased our chances against the intelligent systems.
+		
+		In this stage, we've also tested for different values of the \texttt{decay} value. Our observations indicated that the highest success value is reached when the decay has taken values between the $0.4-0.6$ range. We chose the set this value to $0.5$
 		
 	\section{Teamwork}
-			
-			
-	\section{Implementation}
+	
+	Most of the implementation is carried out by Alp \& Mert, Erdal has contributed on the testing stage and forming a report. 
+
 	\bibliographystyle{IEEEtran}
 	\bibliography{ref.bib}
 	
