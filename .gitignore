@@ -134,3 +134,5 @@ dmypy.json
 *.synctex.gz
 *.bbl
 *.bbg
+
+.DS_Store

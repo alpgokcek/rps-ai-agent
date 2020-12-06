@@ -6,8 +6,6 @@ class RandomPredictor():
     @staticmethod
     def predict():
         return random.choices(POSSIBLE_MOVES, weights=[0.4,0.2,0.4])[0]
-        #return random.choice(POSSIBLE_MOVES)
-
 
 def get_move(agent, is_random=False):
     if not is_random:
@@ -34,11 +32,8 @@ for j in range(1):
             random_move = random_predictor.predict()
         else:
             random_move = get_move(agent)
-        #move = input("Enter your move: ")
         agent.play_RPS(random_move)
-    #print()
     agent.print_results()
-    #agent.print_transition_matrix()
     scores.append(agent.scores)
     agent.scores = {'agent': 0, 'draw': 0, 'opponent': 0}
 
