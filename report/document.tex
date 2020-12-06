@@ -2,7 +2,8 @@
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{lipsum}
-
+\usepackage{listings}
+		
 \author{Alp Gokcek, Erdal Sidal Dogan, Mert Komurcuoglu\\\{gokcekal, doganer, komurcuoglum\}@mef.edu.tr\\ MEF University \\ \today}
 \title{Rock-Paper-Scissors AI Agent}
 
@@ -28,6 +29,8 @@
 	For this problem, our initial approach was to design a rule based system where the each case was covered with the if-else statements. Later on, we searched for another applicable method that we have covered in the lecture so far. Upon our researches, we decided to use \textit{Discrete Markov Chains}
 	
 	\textit{DMC} methods suggest creating a \textit{State Transition Matrix}. Each column of the matrix is the probability score of the upcoming move of the opponent; rows of the matrix corresponds to a previous set of plays and stochastic. \\
+	
+	UML Diagram of the \texttt{RPS\_Agent} class can be seen from \ref{fig:UML}.
 	
 	\begin{table}[h!]
 		\begin{center}
@@ -55,16 +58,24 @@
 		
 		Finally, it updates the \texttt{transition\_sum\_matrix} where the number of occurrence for the each case is stored. As the \texttt{transition\_sum\_matrix} is updated, new probability scores are calculated on the \texttt{transiton\_matrix}
 		
+
+		
+		
+		\lstinputlisting[language={Python}, frame=single, breaklines, basicstyle=\ttfamily, caption= \texttt{update\_transition\_matrix()} method]{source-codes/update-transition-matrix.py} \label{update-matrix-code}
+
 	\subsection{Predict}
 		Since we don't have any data to make our predictions to be based on, in the initial predictions we used the statistics that psychologists observed when conduction a research about the human behavior on Rock-Paper-Scissors.  
 		
+		For the later moves, we use the transition matrix as lookup table where the row corresponding the last 3 moves presents us with the probabilities of the next move. Intuitively, we choose the next state with the highest probability score. However, if one of the scores are significantly higher than the others, we assume that it will be predicted by our opponent agent and it will make their move accordingly. In order to protect ourselves from this move, we make the move with the least probability score to surprise the opponent. 
+			
+				
+		\lstinputlisting[language={Python}, frame=single, breaklines, basicstyle=\ttfamily, caption=\texttt{predict()} method]{source-codes/predict.py} \label{predict-code}
 	
-	
-	\begin{figure}\label{UML}
+	\begin{figure}
 		\centering
 		\includegraphics[scale=0.5]{RPS_Agent.png}
 		\caption{"UML Diagram of the RPS Agent Class"}
-	\end{figure}
+	\end{figure}\label{UML}
 	
 	
 	\section{Testing}
