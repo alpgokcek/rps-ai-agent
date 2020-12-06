@@ -3,17 +3,24 @@ from copy import deepcopy
 
 ROCK, PAPER, SCISSORS = 'R', 'P', 'S'
 POSSIBLE_MOVES= [ROCK, PAPER, SCISSORS]
+
 LAST_POSSIBLE_MOVES = [
     'RRR', 'RRP', 'RRS', 'RPR', 'RPP', 'RPS', 'RSR', 'RSP', 'RSS',
     'PRR', 'PRP', 'PRS', 'PPR', 'PPP', 'PPS', 'PSR', 'PSP', 'PSS',
     'SRR', 'SRP', 'SRS', 'SPR', 'SPP', 'SPS', 'SSR', 'SSP', 'SSS',
     ]
+'''
+LAST_POSSIBLE_MOVES = [
+    'PP', 'PR', 'PS', 'RP', 'RR', 'RS', 'SP', 'SR', 'SS',
+    ]
+'''
 beats = { ROCK: SCISSORS, PAPER: ROCK, SCISSORS: PAPER}
 
 class RPS_Agent():
     def __init__(self, decay):
+        global LAST_POSSIBLE_MOVES
         self.scores = {'agent': 0, 'draw': 0, 'opponent': 0}
-        self.last_moves = '   '
+        self.last_moves = LAST_POSSIBLE_MOVES[0]
         self.transition_matrix = dict()
         self.transition_sum_matrix = dict()
         self.moves = []
@@ -43,6 +50,7 @@ class RPS_Agent():
             print("Draw!")
         else:
             print("Opponent won!")
+
     def train(self, opponent_move):
         self.moves.append(opponent_move)
         self.update_transition_matrix(opponent_move)
@@ -51,7 +59,7 @@ class RPS_Agent():
 
     def update_transition_matrix(self, opponent_move):
         global POSSIBLE_MOVES
-        if len(self.moves) <= 3:
+        if len(self.moves) <= len(LAST_POSSIBLE_MOVES[0]):
             return None
         for i in range(len(self.transition_sum_matrix[self.last_moves])):
             self.transition_sum_matrix[self.last_moves][i] = self.decay * self.transition_sum_matrix[self.last_moves][i]
@@ -61,7 +69,6 @@ class RPS_Agent():
         
         row_sum = sum(transition_matrix_row)
         transition_matrix_row[:] = [count/row_sum for count in transition_matrix_row]
-
         self.transition_matrix[self.last_moves] = transition_matrix_row
 
 
@@ -70,7 +77,7 @@ class RPS_Agent():
         if len(self.predictions) == 0:
             prediction = random.choices(population=POSSIBLE_MOVES, weights=[0.45, 0.35, 0.20], k=1)
             return prediction[0]
-        elif len(self.predictions) in [1,2]:
+        elif len(self.predictions) in range(1, len(LAST_POSSIBLE_MOVES[0])):
             last_prediction, last_move = beats[self.predictions[-1]], self.moves[-1]
             last_result = self.get_result(last_prediction, last_move)
 
@@ -85,7 +92,10 @@ class RPS_Agent():
             if max(row) == min(row):
                 return random.choices(POSSIBLE_MOVES, [0.35, 0.30, 0.35], k=1)[0]
             else:
-                return POSSIBLE_MOVES[row.index(max(row))]
+                if min(row) * random.uniform(1.7, 3) <= max(row):
+                    return random.choices(POSSIBLE_MOVES, weights=[1-prob for prob in row], k=1)[0]
+                else:
+                    return random.choices(POSSIBLE_MOVES, row, k=1)[0]
 
     def make_move(self):
         global beats
@@ -115,9 +125,9 @@ class RPS_Agent():
             return -1
         else:
             return 0
+
     def play_RPS(self, opponent_move):
         global beats
         agent_move = self.make_move()
         self.update_results(agent_move, opponent_move)
         self.train(opponent_move)
-        #print("Agent {} - {} Opponent".format(beats[self.predictions[-1]], opponent_move))
