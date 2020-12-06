@@ -17,7 +17,7 @@ LAST_POSSIBLE_MOVES = [
 beats = { ROCK: SCISSORS, PAPER: ROCK, SCISSORS: PAPER}
 
 class RPS_Agent():
-    def __init__(self, decay):
+    def __init__(self, decay=0.5):
         global LAST_POSSIBLE_MOVES
         self.scores = {'agent': 0, 'draw': 0, 'opponent': 0}
         self.last_moves = LAST_POSSIBLE_MOVES[0]
@@ -62,7 +62,7 @@ class RPS_Agent():
         if len(self.moves) <= len(LAST_POSSIBLE_MOVES[0]):
             return None
         for i in range(len(self.transition_sum_matrix[self.last_moves])):
-            self.transition_sum_matrix[self.last_moves][i] = self.decay * self.transition_sum_matrix[self.last_moves][i]
+            self.transition_sum_matrix[self.last_moves][i] *= self.decay
         self.transition_sum_matrix[self.last_moves][POSSIBLE_MOVES.index(opponent_move)] += 1
 
         transition_matrix_row = deepcopy(self.transition_sum_matrix[self.last_moves])
