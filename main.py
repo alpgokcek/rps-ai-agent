@@ -5,20 +5,39 @@ class RandomPredictor():
 
     @staticmethod
     def predict():
-        #return random.choices(POSSIBLE_MOVES, weights=[0.4,0.2,0.4])[0]
-        return random.choice(POSSIBLE_MOVES)
+        return random.choices(POSSIBLE_MOVES, weights=[0.4,0.2,0.4])[0]
+        #return random.choice(POSSIBLE_MOVES)
+
+
+def get_move(agent, is_random=False):
+    if not is_random:
+        last_prediction, last_move = beats[agent.predictions[-1]], agent.moves[-1]
+        last_result = agent.get_result(last_prediction, last_move)
+        if last_result in [0,1]:
+            prediction = beats[last_prediction]
+        else:
+            prediction = beats[last_move]
+    else:
+        random_move = random_predictor.predict()
+    return prediction
+
+        
 
 random_predictor = RandomPredictor()
 
 scores = []
-agent=RPS_Agent(0.1)
-for q in range(100):
-    for i in range(1000):
-        random_move = random_predictor.predict()
+agent=RPS_Agent(0.5)
+for j in range(1):
+    agent.print_transition_matrix()
+    for i in range(10):
+        if i == 0:
+            random_move = random_predictor.predict()
+        else:
+            random_move = get_move(agent)
         #move = input("Enter your move: ")
         agent.play_RPS(random_move)
     #print()
-    #agent.print_results()
+    agent.print_results()
     #agent.print_transition_matrix()
     scores.append(agent.scores)
     agent.scores = {'agent': 0, 'draw': 0, 'opponent': 0}
