@@ -132,3 +132,5 @@ dmypy.json
 # TeX File
 *.aux
 *.synctex.gz
+*.bbl
+*.bbg
